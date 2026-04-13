@@ -1,9 +1,12 @@
+import java.util.Random;
+
 public class Jogador {
     private String nome;
     private int vida;
     private int nivel;
     private int ataque;
     private int defesa;
+    private boolean defendendo = false;
 
     public Jogador(String nome) {
         this.nome = nome;
@@ -30,16 +33,31 @@ public class Jogador {
     }
 
     public void atacar(Inimigo inimigo) {
-        int dano = this.ataque - inimigo.getDefesa();
+        Random rand = new Random();
+
+        int variacao = rand.nextInt(5); // 0 a 4
+        int dano = (this.ataque + variacao) - inimigo.getDefesa();
+
         if (dano > 0) {
             inimigo.receberDano(dano);
             System.out.println(nome + " atacou " + inimigo.getNome() + " e causou " + dano + " de dano!");
         } else {
-            System.out.println(nome + " não conseguiu causar dano a " + inimigo.getNome());
+            System.out.println(nome + " não conseguiu causar dano!");
         }
     }
 
+    public void defender() {
+        defendendo = true;
+        System.out.println(nome + " está se defendendo! (dano reduzido no próximo ataque)");
+    }
+
     public void receberDano(int dano) {
+        if (defendendo) {
+            dano /= 2; 
+            defendendo = false; 
+            System.out.println(nome + " defendeu o ataque!");
+        }
+
         this.vida -= dano;
         System.out.println(nome + " recebeu " + dano + " de dano!");
     }
@@ -52,5 +70,3 @@ public class Jogador {
         System.out.println(nome + " evoluiu para o nível " + nivel + "!");
     }
 }
-
-    
